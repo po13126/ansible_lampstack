@@ -1,0 +1,51 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+   - name: Install lampstack of apache2 php mysql
+     apt: 
+      pkg: apache2 
+      state: present 
+      #update_cache: yes
+     notify:
+      - run apache2
+   - name: Install mysql
+     apt: 
+      pkg: mysql-server 
+      state: present 
+      #update_cache: yes
+   - name: Install php
+     apt: 
+      pkg: php 
+      state: present 
+      #update_cache: yes
+   - name: Install php-mysql
+     apt: 
+      pkg: php-mysql 
+      state: present 
+      #update_cache: yes  
+      # - name: Start apache server
+      #service:
+      #name: run apache2
+      #state: started
+      #enabled: yes
+   - name: start my sql service
+     service:
+      name: mysql
+      state: started
+      enabled: yes
+      # - name: create target directory
+      #file: path=/var/www/html state=directory mode=075
+   - name: deploy index.html
+     copy:
+      src: /etc/ansible/index.html
+      dest: /var/www/html/index/index.html
+  handlers:
+  - name: Start apache server
+    service:
+     name: run apache2
+     state: started
+     enabled: yes
+    
+...          
